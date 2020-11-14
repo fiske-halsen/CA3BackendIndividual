@@ -2,6 +2,7 @@ package fetcher;
 
 import com.google.gson.Gson;
 import dto.CombinedDTO;
+import dto.DadDTO;
 import dto.PeopleDTO;
 import dto.PlanetDTO;
 import dto.SpeciesDTO;
@@ -22,6 +23,8 @@ public class StarWarsFetcher {
     private static final String SPECIES_URL = "https://swapi.dev/api/species/9/";
     private static final String STARSHIP_URL = "https://swapi.dev/api/starships/3/";
     private static final String VEHICLE_URL = "https://swapi.dev/api/vehicles/4/";
+    private static final String DAD_URL = "https://icanhazdadjoke.com/";
+    
 
     public static String responseFromExternalServersParrallel(ExecutorService threadPool, Gson gson) throws InterruptedException, ExecutionException, TimeoutException {
 
@@ -74,22 +77,34 @@ public class StarWarsFetcher {
                 return vehicleDTO;
             }
         };
+        
+           Callable<DadDTO> dadTask = new Callable<DadDTO>() {
+            @Override
+            public DadDTO call() throws Exception {
+                String dad = HttpUtils.fetchData(DAD_URL);
+                DadDTO dadDTO = gson.fromJson(dad, DadDTO.class);
+                return dadDTO;
+            }
+        };
+        
+        
         Future<PeopleDTO> futurePeople = threadPool.submit(peopleTask);
         Future<PlanetDTO> futurePlanet = threadPool.submit(planetTask);
         Future<SpeciesDTO> futureSpecies = threadPool.submit(speciesTask);
         Future<StarshipDTO> futureStarship = threadPool.submit(starshipTask);
         Future<VehicleDTO> futureVehicle = threadPool.submit(vehicleTask);
+        Future<DadDTO> futureDad = threadPool.submit(dadTask);
 
         PeopleDTO people = futurePeople.get(2, TimeUnit.SECONDS);
         PlanetDTO planet = futurePlanet.get(2, TimeUnit.SECONDS);
         SpeciesDTO species = futureSpecies.get(2, TimeUnit.SECONDS);
         StarshipDTO starship = futureStarship.get(2, TimeUnit.SECONDS);
         VehicleDTO vehicle = futureVehicle.get(2, TimeUnit.SECONDS);
+        DadDTO dadDTO = futureDad.get(2, TimeUnit.SECONDS);
 
-        CombinedDTO combinedDTO = new CombinedDTO(people, planet, species, starship, vehicle);
+        CombinedDTO combinedDTO = new CombinedDTO(people, planet, species, starship, vehicle, dadDTO);
         String combinedJSON = gson.toJson(combinedDTO);
         
         return combinedJSON;
     }
-
 }

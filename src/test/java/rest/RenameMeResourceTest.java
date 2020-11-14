@@ -108,6 +108,9 @@ public class RenameMeResourceTest {
                 .body("speciesName", equalTo("Ewok"))
                 .body("starshipName", equalTo("Star Destroyer"))
                 .body("vehicleName", equalTo("Sand Crawler"));
+               
+        
+                
 
  
     }
