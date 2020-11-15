@@ -2,6 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.PhoneDTO;
 import dto.UserDTO;
 import entities.User;
 import facades.FacadeExample;
@@ -124,6 +125,13 @@ public class DemoResource {
         return Response.ok(userDTO).build();
     }
     
+    @Path("getuserphones/{username}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getUserPhones(@PathParam("username") String userName) {
+        List<PhoneDTO> phoneDTOs = USERFACADE.getAllPhoneNumbersByUser(userName);
+        return GSON.toJson(phoneDTOs);
+    }
     
     @Path("setUpUsers")
     @GET
