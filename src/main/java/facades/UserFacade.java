@@ -1,8 +1,11 @@
 package facades;
 
 import dto.UserDTO;
+import dto.PhoneDTO;
 import entities.Phone;
 import entities.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
@@ -64,6 +67,32 @@ public class UserFacade {
             em.close();
         }
     }
+    
+    
+      public List<PhoneDTO> getAllPhoneNumbersByUser(String userName) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Query query = em.createQuery("SELECT p FROM Phone p JOIN p.user users WHERE users.userName = :userName", Phone.class);
+            query.setParameter("userName", userName);
+            List<Phone> phoneList = query.getResultList();
+            
+            List<PhoneDTO> phoneDTOs = new ArrayList();
+            for (Phone phone : phoneList) {
+                phoneDTOs.add(new PhoneDTO(phone));
+            }
+            
+            return phoneDTOs;
+        } finally {
+            em.close();
+        }
+
+    }
+    
+    
+    
+    
+    
+    
     
     
     

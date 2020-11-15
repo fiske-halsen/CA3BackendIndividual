@@ -11,11 +11,11 @@ import entities.Phone;
  *
  * @author phill
  */
-class PhoneDTO {
-    
+public class PhoneDTO {
+
     private String number;
-    
-    public PhoneDTO(Phone phone){
+
+    public PhoneDTO(Phone phone) {
         this.number = phone.getNumber();
     }
 
@@ -26,7 +26,5 @@ class PhoneDTO {
     public void setNumber(String number) {
         this.number = number;
     }
-    
-    
-    
+
 }
